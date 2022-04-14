@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles'
-import Header from '../components/Header'
+import Header from '../../components/Header'
 import axios from 'axios'
 import {
   Box,
@@ -69,7 +69,9 @@ function Home({ posts }) {
 }
 export async function getStaticProps() {
   try {
-    const res = await axios.get('https://peacock-store.herokuapp.com/api/')
+    const res = await axios.get(
+      `https://peacock-store.herokuapp.com/api/category/${params.slug}}`
+    )
     const posts = res.data
     return {
       props: {

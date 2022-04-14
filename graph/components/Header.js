@@ -12,6 +12,7 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
+import { List } from '@mui/material'
 
 const pages = ['Products', 'Pricing', 'Blog']
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
@@ -40,7 +41,27 @@ const useStyles = makeStyles((theme) => ({
   },
   logo: {
     width: '40px',
-    height: '100%',
+    height: '40px',
+  },
+  appbarSecondary: {
+    backgroundColor: '#a6adbb',
+    color: '#18cdba',
+  },
+  toolbarSecondary: {
+    padding: '0px',
+    minHeight: 50,
+  },
+  menuList: {},
+  appbarPromotion: {
+    backgroundColor: '#e0e9f3',
+    margin: theme.spacing(0, 0, 8),
+    ['@media (max-width:600px)']: {
+      margin: theme.spacing(0, 0, 2),
+    },
+  },
+  toolbarPromotion: {
+    padding: '0px',
+    minHeight: 50,
   },
 }))
 
@@ -170,6 +191,33 @@ const Header = () => {
               </Menu>
             </Box>
           </Toolbar>
+        </Container>
+      </AppBar>
+
+      <AppBar
+        position="relative"
+        elevation={0}
+        className={classes.appbarSecondary}
+      >
+        <Container maxWidth="lg">
+          <Toolbar className={classes.toolbarSecondary}>
+            <List className={classes.menuList}>
+              {/* {data.map((category) => (
+                          <ListItem key={category.name} className={classes.menuListItme}>
+                            <Link href={`/category/${encodeURIComponent(category.slug)}`}><a className='' /></Link>
+                          </ListItem>
+                        ))} */}
+            </List>
+          </Toolbar>
+        </Container>
+      </AppBar>
+      <AppBar
+        position="relative"
+        elevation={0}
+        className={classes.appbarPromotion}
+      >
+        <Container maxWidth="lg">
+          <Toolbar className={classes.toolbarPromotion}></Toolbar>
         </Container>
       </AppBar>
     </nav>
