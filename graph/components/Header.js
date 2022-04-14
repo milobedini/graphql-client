@@ -17,15 +17,27 @@ const pages = ['Products', 'Pricing', 'Blog']
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
   appbarMain: {
     boxShadow: '0 1px 2px 0 #28d79a',
     borderBottomWidth: '1px',
     backgroundColor: '#0c1527',
     color: '#eef6ff',
   },
-  toolbarMain: {},
-  appbarDesktop: {},
-  toolbarDesktop: {},
+  toolbarMain: {
+    padding: '0px',
+    minHeight: 60,
+  },
+  appbarDesktop: {
+    backgroundColor: '#eef6ff',
+    color: '#fff',
+  },
+  toolbarDesktop: {
+    padding: '0px',
+    minHeight: 30,
+  },
   logo: {
     width: '40px',
     height: '100%',
