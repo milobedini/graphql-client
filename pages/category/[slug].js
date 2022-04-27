@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -28,6 +29,12 @@ const useStyles = makeStyles((theme) => ({
 
 function Home({ posts }) {
   const classes = useStyles()
+
+  const router = useRouter()
+  if (router.isFallback) {
+    return <div>Loading...</div>
+  }
+
   return (
     <>
       <Header />
@@ -67,10 +74,18 @@ function Home({ posts }) {
     </>
   )
 }
-export async function getStaticProps() {
+
+export async function getStaticPaths() {
+  return {
+    paths: [{ params: { slug: 'shoes' } }],
+    fallback: true,
+  }
+}
+
+export async function getStaticProps({ params }) {
   try {
     const res = await axios.get(
-      `https://peacock-store.herokuapp.com/api/category/${params.slug}}`
+      `https://peacock-store.herokuapp.com/api/category/${params.slug}`
     )
     const posts = res.data
     return {
