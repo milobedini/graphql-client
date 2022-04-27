@@ -12,7 +12,8 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
-import { List } from '@mui/material'
+import { List, ListItem } from '@mui/material'
+import Link from 'next/link'
 
 const pages = ['Products', 'Pricing', 'Blog']
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
@@ -51,7 +52,11 @@ const useStyles = makeStyles((theme) => ({
     padding: '0px',
     minHeight: 50,
   },
-  menuList: {},
+  menuList: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 0,
+  },
   appbarPromotion: {
     backgroundColor: '#e0e9f3',
     margin: theme.spacing(0, 0, 8),
@@ -63,9 +68,19 @@ const useStyles = makeStyles((theme) => ({
     padding: '0px',
     minHeight: 50,
   },
+  menuListItem: {
+    padding: 0,
+    paddingRight: 20,
+    textTransform: 'capitalize',
+  },
+  listItemLink: {
+    fontSize: 13,
+    color: '#0c1527',
+    textDecoration: 'none',
+  },
 }))
 
-const Header = () => {
+const Header = ({ categories }) => {
   const classes = useStyles()
   const [anchorElNav, setAnchorElNav] = useState(null)
   const [anchorElUser, setAnchorElUser] = useState(null)
@@ -84,6 +99,7 @@ const Header = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
+
   return (
     <nav>
       <AppBar position="relative" className={classes.appbarDesktop}>
@@ -138,17 +154,21 @@ const Header = () => {
                 ))}
               </Menu>
             </Box>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-            >
-              <img
-                src="https://res.cloudinary.com/dvgbdioec/image/upload/v1644768223/peacock_yevwhu.png"
-                className={classes.logo}
-              />
-            </Typography>
+            <Link href={'/'}>
+              <a>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+                >
+                  <img
+                    src="https://res.cloudinary.com/dvgbdioec/image/upload/v1644768223/peacock_yevwhu.png"
+                    className={classes.logo}
+                  />
+                </Typography>
+              </a>
+            </Link>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {pages.map((page) => (
                 <Button
@@ -202,11 +222,13 @@ const Header = () => {
         <Container maxWidth="lg">
           <Toolbar className={classes.toolbarSecondary}>
             <List className={classes.menuList}>
-              {/* {data.map((category) => (
-                          <ListItem key={category.name} className={classes.menuListItme}>
-                            <Link href={`/category/${encodeURIComponent(category.slug)}`}><a className='' /></Link>
-                          </ListItem>
-                        ))} */}
+              {categories.map((category) => (
+                <ListItem key={category.name} className={classes.menuListItem}>
+                  <Link href={`/category/${encodeURIComponent(category.slug)}`}>
+                    <a className={classes.listItemLink}>{category.name}</a>
+                  </Link>
+                </ListItem>
+              ))}
             </List>
           </Toolbar>
         </Container>

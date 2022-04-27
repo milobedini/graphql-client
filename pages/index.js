@@ -26,11 +26,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function Home({ posts }) {
+function Home({ posts, categories }) {
   const classes = useStyles()
   return (
     <>
-      <Header />
+      <Header categories={categories} />
       <main>
         <Container className={classes.cardGrid} maxwidth="lg">
           <Grid container spacing={2}>
@@ -71,9 +71,17 @@ export async function getStaticProps() {
   try {
     const res = await axios.get('https://peacock-store.herokuapp.com/api/')
     const posts = res.data
+
+    // This is how to pass data between pages.
+    const ress = await axios.get(
+      'https://peacock-store.herokuapp.com/api/category/'
+    )
+    const categories = ress.data
+    // include it in the props and import it within Home above.
     return {
       props: {
         posts,
+        categories,
       },
     }
   } catch (err) {

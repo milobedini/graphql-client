@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Product = ({ post }) => {
+const Product = ({ post, categories }) => {
   const classes = useStyles()
   const router = useRouter()
 
@@ -53,7 +53,7 @@ const Product = ({ post }) => {
       <Head>
         <title>{post.title}</title>
       </Head>
-      <Header />
+      <Header categories={categories} />
       <Container maxWidth="md">
         <Grid container spacing={0}>
           <Hidden only={['xs', 'sm']}>
@@ -119,9 +119,16 @@ export async function getStaticProps({ params }) {
       `https://peacock-store.herokuapp.com/api/${params.slug}`
     )
     const post = res.data
+    // This is how to pass data between pages.
+    const ress = await axios.get(
+      'https://peacock-store.herokuapp.com/api/category/'
+    )
+    const categories = ress.data
+    // include it in the props and import it within Home above.
     return {
       props: {
         post,
+        categories,
       },
     }
   } catch (err) {
