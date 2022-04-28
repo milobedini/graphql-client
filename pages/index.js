@@ -10,7 +10,9 @@ import {
   Grid,
   Typography,
 } from '@mui/material'
+import { gql } from '@apollo/client'
 import Link from 'next/link'
+import client from './api/apolloClient'
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -26,10 +28,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function Home({ posts, categories }) {
+function Home({ posts, categories, data }) {
   const classes = useStyles()
   return (
     <>
+      {console.log(data)}
       <Header categories={categories} />
       <main>
         <Container className={classes.cardGrid} maxwidth="lg">
@@ -78,8 +81,25 @@ export async function getStaticProps() {
     )
     const categories = ress.data
     // include it in the props and import it within Home above.
+
+    // GraphQL query, simply copy across from iQL:
+    const { data } = await client.query({
+      query: gql`
+        query allProducts {
+          allProducts {
+            id
+            title
+            description
+            regularPrice
+            slug
+          }
+        }
+      `,
+    })
+
     return {
       props: {
+        data: data.allProducts,
         posts,
         categories,
       },
