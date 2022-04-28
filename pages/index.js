@@ -28,16 +28,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function Home({ posts, categories, data }) {
+function Home({ categories, data }) {
   const classes = useStyles()
   return (
     <>
-      {console.log(data)}
       <Header categories={categories} />
       <main>
         <Container className={classes.cardGrid} maxwidth="lg">
           <Grid container spacing={2}>
-            {posts.map((post) => (
+            {data.map((post) => (
               <Link
                 key={post.id}
                 href={`product/${encodeURIComponent(post.slug)}`}
@@ -49,15 +48,15 @@ function Home({ posts, categories, data }) {
                   <Card className={classes.card} elevation={0}>
                     <CardMedia
                       className={classes.cardMedia}
-                      image={post.product_image[0]?.image}
-                      alt={post.product_image[0]?.alt_text}
+                      image={post.productImage[0]?.image}
+                      alt={post.productImage[0]?.altText}
                     />
                     <CardContent>
                       <Typography gutterBottom component="p">
                         {post.title}
                       </Typography>
                       <Box component="p" fontSize={16} fontWeight={900}>
-                        £{post.regular_price}
+                        £{post.regularPrice}
                       </Box>
                     </CardContent>
                   </Card>
@@ -72,8 +71,8 @@ function Home({ posts, categories, data }) {
 }
 export async function getStaticProps() {
   try {
-    const res = await axios.get('https://peacock-store.herokuapp.com/api/')
-    const posts = res.data
+    // const res = await axios.get('https://peacock-store.herokuapp.com/api/')
+    // const posts = res.data
 
     // This is how to pass data between pages.
     const ress = await axios.get(
@@ -92,6 +91,11 @@ export async function getStaticProps() {
             description
             regularPrice
             slug
+            productImage {
+              id
+              image
+              altText
+            }
           }
         }
       `,
@@ -100,7 +104,6 @@ export async function getStaticProps() {
     return {
       props: {
         data: data.allProducts,
-        posts,
         categories,
       },
     }
