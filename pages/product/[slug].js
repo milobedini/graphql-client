@@ -1,5 +1,4 @@
 import { makeStyles } from '@mui/styles'
-import axios from 'axios'
 import React from 'react'
 import { useRouter } from 'next/router'
 import Header from '../../components/Header'
@@ -122,13 +121,14 @@ export async function getStaticProps({ params }) {
     // )
     // const post = res.data
     // This is how to pass data between pages.
-    const ress = await axios.get(
-      'https://peacock-store.herokuapp.com/api/category/'
-    )
-    const categories = ress.data
+    // const ress = await axios.get(
+    //   'https://peacock-store.herokuapp.com/api/category/'
+    // )
+    // const categories = ress.data
     // include it in the props and import it within Home above.
 
     // specifies that slug is a variable and must be a string, and then uses it in the query.
+
     const productData = gql`
       query ($slug: String!) {
         allProductsByName(slug: $slug) {
@@ -145,6 +145,19 @@ export async function getStaticProps({ params }) {
       }
     `
 
+    const categories = await client.query({
+      query: gql`
+        query Categories {
+          allCategories {
+            id
+            name
+            slug
+          }
+        }
+      `,
+    })
+    console.log(categories)
+
     const slug = params.slug
     const { data } = await client.query({
       query: productData,
@@ -156,7 +169,7 @@ export async function getStaticProps({ params }) {
     return {
       props: {
         data: data.allProductsByName,
-        categories,
+        categories: categories.data.allCategories,
       },
     }
   } catch (err) {

@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles'
 import Header from '../components/Header'
-import axios from 'axios'
+
 import {
   Box,
   Card,
@@ -75,11 +75,23 @@ export async function getStaticProps() {
     // const posts = res.data
 
     // This is how to pass data between pages.
-    const ress = await axios.get(
-      'https://peacock-store.herokuapp.com/api/category/'
-    )
-    const categories = ress.data
+    // const ress = await axios.get(
+    //   'https://peacock-store.herokuapp.com/api/category/'
+    // )
+    // const categories = ress.data
     // include it in the props and import it within Home above.
+
+    const categories = await client.query({
+      query: gql`
+        query Categories {
+          allCategories {
+            id
+            name
+            slug
+          }
+        }
+      `,
+    })
 
     // GraphQL query, simply copy across from iQL:
     const { data } = await client.query({
@@ -101,10 +113,11 @@ export async function getStaticProps() {
       `,
     })
 
+    console.log(categories)
     return {
       props: {
         data: data.allProducts,
-        categories,
+        categories: categories.data.allCategories,
       },
     }
   } catch (err) {

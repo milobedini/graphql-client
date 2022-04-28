@@ -1,6 +1,5 @@
 import { makeStyles } from '@mui/styles'
 import Header from '../../components/Header'
-import axios from 'axios'
 import {
   Box,
   Card,
@@ -10,8 +9,10 @@ import {
   Grid,
   Typography,
 } from '@mui/material'
+import { gql } from '@apollo/client'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import client from '../api/apolloClient'
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -27,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function Home({ posts, categories }) {
+function Home({ categories, data }) {
+  console.log(categories)
   const classes = useStyles()
 
   const router = useRouter()
@@ -37,11 +39,12 @@ function Home({ posts, categories }) {
 
   return (
     <>
+      {console.log(data)}
       <Header categories={categories} />
       <main>
         <Container className={classes.cardGrid} maxwidth="lg">
           <Grid container spacing={2}>
-            {posts.map((post) => (
+            {data.map((post) => (
               <Link
                 key={post.id}
                 href={`product/${encodeURIComponent(post.slug)}`}
@@ -53,15 +56,15 @@ function Home({ posts, categories }) {
                   <Card className={classes.card} elevation={0}>
                     <CardMedia
                       className={classes.cardMedia}
-                      image={post.product_image[0]?.image}
-                      alt={post.product_image[0]?.alt_text}
+                      image={post.productImage[0]?.image}
+                      alt={post.productImage[0]?.alt_text}
                     />
                     <CardContent>
                       <Typography gutterBottom component="p">
                         {post.title}
                       </Typography>
                       <Box component="p" fontSize={16} fontWeight={900}>
-                        £{post.regular_price}
+                        £{post.regularPrice}
                       </Box>
                     </CardContent>
                   </Card>
@@ -84,20 +87,61 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   try {
-    const res = await axios.get(
-      `https://peacock-store.herokuapp.com/api/category/${params.slug}`
-    )
-    const posts = res.data
+    // const res = await axios.get(
+    //   `https://peacock-store.herokuapp.com/api/category/${params.slug}`
+    // )
+    // const posts = res.data
     // This is how to pass data between pages.
-    const ress = await axios.get(
-      'https://peacock-store.herokuapp.com/api/category/'
-    )
-    const categories = ress.data
+    // const ress = await axios.get(
+    //   'https://peacock-store.herokuapp.com/api/category/'
+    // )
+    // const categories = ress.data
     // include it in the props and import it within Home above.
+
+    const allProducts = gql`
+      query ($name: String!) {
+        categoryByName(name: $name) {
+          id
+          name
+          product {
+            id
+            title
+            description
+            regularPrice
+            productImage {
+              id
+              image
+              altText
+            }
+          }
+        }
+      }
+    `
+    const categories = await client.query({
+      query: gql`
+        query Categories {
+          allCategories {
+            id
+            name
+            slug
+          }
+        }
+      `,
+    })
+    console.log(categories)
+
+    const name = params.slug
+
+    const { data } = await client.query({
+      query: allProducts,
+      variables: { name },
+    })
+
     return {
       props: {
-        posts,
-        categories,
+        data: data.categoryByName.product,
+
+        categories: categories.data.allCategories,
       },
     }
   } catch (err) {

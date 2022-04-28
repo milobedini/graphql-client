@@ -102,6 +102,7 @@ const Header = ({ categories }) => {
 
   return (
     <nav>
+      {console.log(categories)}
       <AppBar position="relative" className={classes.appbarDesktop}>
         <Container max-width="lg">
           <Toolbar className={classes.toolbarDesktop}></Toolbar>
